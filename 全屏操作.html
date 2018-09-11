@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<video width="500px" src="trailer.mp4"></video>
+<button class="btn1">full</button>
+<button class="btn2">取消</button>
+<script>
+    document.querySelector('.btn1').onclick=function () {
+//        document.querySelector('video').webkitRequestFullScreen();
+        document.documentElement.webkitRequestFullScreen();//页面文档
+    };
+    document.querySelector('.btn2').onclick=function () {
+        document.webkitCancelFullScreen();
+    }
+</script>
+</body>
+</html>

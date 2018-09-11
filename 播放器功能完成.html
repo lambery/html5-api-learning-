@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>视频播放</title>
+    <!--字体图标库-->
+    <link rel="stylesheet" href="css/font-awesome.css"/>
+    <link rel="stylesheet" href="css/player.css"/>
+</head>
+<body>
+<figure>
+    <figcaption>视频播放器</figcaption>
+    <div class="player">
+        <video src="trailer.mp4"></video>
+        <div class="controls">
+            <!--播放/暂停-->
+            <a href="javascript:;" class="switch fa fa-play"></a>
+            <!--播放进度-->
+            <div class="progress">
+                <div class="line"></div>
+                <div class="bar"></div>
+            </div>
+            <!--当前播放时间/播放总时长-->
+            <div class="timer">
+                <span class="current">00:00:00</span> / <span class="total">00:00:00</span>
+            </div>
+            <!--全屏/取消全屏-->
+            <a href="javascript:;" class="expand fa fa-arrows-alt"></a>
+        </div>
+    </div>
+</figure>
+<script src="jquery.min.js"></script>
+<script>
+  $(function () {
+      var $video=$('video');
+      var video=$video.get(0);
+
+      var $total=$('.total');
+
+      var $switch=$('.switch');
+
+      var $line=$('.line');
+
+      var $current=$('.current');
+
+      var $expand=$('.expand');
+
+      var $bar=$('.bar');
+
+      var formatTime=function (time) {
+        var h=Math.floor(time/3600 );
+        var m=Math.floor(time%3600/60);
+        var s=Math.floor(time%60);
+          return (h>=10?h:'0'+h)+':'+(m>=10?m:'0'+m)+':'+(s>=10?s:'0'+s);
+      };
+
+      video.oncanplay=function () {
+          $video.show();
+          $total.html(formatTime(video.duration));
+      };
+
+      $switch.on('click', function () {
+          if($switch.hasClass('fa-play')){
+              video.play();
+              $switch.removeClass('fa-play').addClass('fa-pause');
+          }else{
+              video.pause();
+              $switch.removeClass('fa-pause').addClass('fa-play');
+          }
+      });
+      
+      video.ontimeupdate=function () {
+          $current.html(formatTime(video.currentTime));
+          var ratio=video.currentTime/video.duration;
+          var p=ratio*100+'%';
+          $line.css('width',p);
+      };
+      
+      $expand.on('click', function () {
+          if($expand.hasClass('fa-arrows-alt')){
+              video.webkitRequestFullScreen();
+              $expand.removeClass('fa-arrows-alt').addClass('fa-compress');
+          }else{
+              document.webkitCancelFullScreen();
+              $expand.addClass('fa-arrows-alt').removeClass('fa-compress');
+          }
+      });
+
+      $bar.on('click',function(e){
+          var width=$bar.width();
+          var place=e.offsetX;
+          var time =place/width*video.duration;
+          video.currentTime = time;
+      });
+
+      video.onended=function () {
+          video.currentTime=0;
+          $switch.addClass('fa-play').remove('fa-pause');
+      }
+
+      
+
+
+
+
+
+
+
+
+
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            margin-left: 300px;
+        }
+        ul{
+            list-style: none;
+        }
+        ul li,div{
+            width: 250px;
+            padding: 10px 0;
+            margin-left: 10px;
+            border-bottom: 1px dashed #ccc;
+            height: 20px;
+        }
+        a{
+            float: right;
+        }
+        input{
+            padding: 5px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<input type="search" placeholder="输入搜索关键字"/>
+<input type="button" value="搜索"/>
+<div><a href="javascript:;">清空搜索记录</a></div>
+<ul>
+
+</ul>
+<script src="jquery.min.js"></script>
+<script>
+    $(function () {
+        var historyListJson=localStorage.getItem('historyList')||'[]';
+
+        var historyListArr=JSON.parse(historyListJson);
+
+        var render=function () {
+            var html2='';
+            historyListArr.forEach(function (item,i) {
+                html2+='<li><span>'+item+'</span><a data-index="'+i+'" href="javascript:;">删除</a></li>'
+            });
+            html2=html2||'<li>没有搜索记录</li>';
+            $('ul').html(html2);
+
+        };
+         render();
+
+        $('[type="button"]').on('click', function () {
+             var key=$.trim( $('[type="search"]').val() );
+
+            if(!key){
+                alert('请输入');
+                return false;
+            }
+            historyListArr.push(key);
+            localStorage.setItem('historyList',JSON.stringify(historyListArr));
+            render();
+            $('[type="search"]').val('');
+        });
+
+        $('ul').on('click', 'a', function () {
+           var lii=$(this).data('index');
+            historyListArr.splice(lii,1);
+            localStorage.setItem('historyList',JSON.stringify(historyListArr));
+            render();
+        } );
+
+        $('div a').on('click', function () {
+            historyListArr=[];
+            localStorage.setItem('historyList',JSON.stringify(historyListArr));
+            render();
+        })
+
+
+
+    });
+</script>
+</body>
+</html>
